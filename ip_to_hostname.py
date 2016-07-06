@@ -21,10 +21,10 @@ class Master:
 
 class Node:
 	
-	def __init__(self, pub_ip, pvt_ip):
+	def __init__(self, pub_ip, pvt_ip, index):
 		self.contiv_control_if = "eth0"
 		self.contiv_network_if = "tap0"
-		self.contiv_network_ip = "2.2.2.2"
+		self.contiv_network_ip = "2.2.2.%s"%index
 		self.contiv_control_ip = pvt_ip
 		self.management_ip = pub_ip
 		self.name = ipToHostname(pvt_ip)
@@ -41,11 +41,14 @@ if len(sys.argv) < 5:
 	usage()
 	sys.exit(1)
 
-inventory=[Master(sys.argv[1], sys.argv[2]).__dict__]
+inventory={"master": [Master(sys.argv[1], sys.argv[2]).__dict__]}
+nodes_inventory=[]
 
 i = 3
 while i < len(sys.argv):
-	inventory.append(Node(sys.argv[i], sys.argv[i+1]).__dict__)
+	nodes_inventory.append(Node(sys.argv[i], sys.argv[i+1], i).__dict__)
 	i += 2
+
+inventory["nodes"] = nodes_inventory
 
 print json.dumps(inventory, sort_keys=True, indent=4)
