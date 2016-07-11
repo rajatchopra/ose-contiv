@@ -8,4 +8,4 @@
   ignore_errors: yes
 
 - name: Contiv | Configure network
-  raw: netctl net create default-net --subnet={{contiv_default_subnet}} --gateway={{contiv_default_gw}}
+  raw: netctl --netmaster="http://127.0.0.1:9999" net create default-net --subnet={{contiv_default_subnet}} --gateway={{contiv_default_gw}}
